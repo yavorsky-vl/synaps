@@ -5,6 +5,15 @@
 			"referenceName": "yvtest",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"shcemaName": {
+				"type": "String",
+				"defaultValue": "yvv"
+			},
+			"TableName": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
@@ -24,8 +33,14 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "yvv",
-			"table": "Organisation"
+			"schema": {
+				"value": "@dataset().shcemaName",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
 		}
 	}
 }
