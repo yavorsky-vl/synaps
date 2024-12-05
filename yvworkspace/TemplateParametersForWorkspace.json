@@ -8,6 +8,9 @@
 		"EaTest_password": {
 			"value": ""
 		},
+		"yvtest_password": {
+			"value": ""
+		},
 		"yvworkspace-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:yvworkspace.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
@@ -19,6 +22,15 @@
 		},
 		"EaTest_properties_typeProperties_userName": {
 			"value": "NexusDevTeam"
+		},
+		"yvtest_properties_typeProperties_server": {
+			"value": "yv-sql.database.windows.net"
+		},
+		"yvtest_properties_typeProperties_database": {
+			"value": "yv-test"
+		},
+		"yvtest_properties_typeProperties_userName": {
+			"value": "yavorsky-admin"
 		},
 		"yvworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://yvstoragesypaps.dfs.core.windows.net"

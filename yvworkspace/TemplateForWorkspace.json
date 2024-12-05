@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'EaTest'"
 		},
+		"yvtest_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'yvtest'"
+		},
 		"yvworkspace-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'yvworkspace-WorkspaceDefaultSqlServer'",
@@ -27,6 +31,18 @@
 		"EaTest_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "NexusDevTeam"
+		},
+		"yvtest_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "yv-sql.database.windows.net"
+		},
+		"yvtest_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "yv-test"
+		},
+		"yvtest_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "yavorsky-admin"
 		},
 		"yvworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -59,6 +75,57 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/YvTest')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "yvtest",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"shcemaName": {
+						"type": "String",
+						"defaultValue": "yvv"
+					},
+					"TableName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "NameOrganisation",
+						"type": "nchar"
+					},
+					{
+						"name": "CreateDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().shcemaName",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/yvtest')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/EaTest')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -75,6 +142,34 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('EaTest_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/yvtest')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('yvtest_properties_typeProperties_server')]",
+					"database": "[parameters('yvtest_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('yvtest_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('yvtest_password')]"
 					}
 				},
 				"connectVia": {
@@ -155,6 +250,86 @@
 			"properties": {
 				"type": "ManagedIdentity",
 				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/TestScript')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "YvShark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "67e31879-a41c-43ee-9c6e-d685bac8386b"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/9c7fa0b7-69cc-4279-8147-327b6de9f406/resourceGroups/synaps-yv/providers/Microsoft.Synapse/workspaces/yvworkspace/bigDataPools/YvShark",
+						"name": "YvShark",
+						"type": "Spark",
+						"endpoint": "https://yvworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/YvShark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"new_rows = [('CA',22, 45000),(\"WA\",35,65000) ,(\"WA\",50,85000)]\r\n",
+							"demo_df = spark.createDataFrame(new_rows, ['state', 'age', 'salary'])\r\n",
+							"demo_df.show()"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						]
+					}
+				]
 			},
 			"dependsOn": []
 		},
