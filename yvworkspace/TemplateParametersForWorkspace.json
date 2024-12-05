@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "yvworkspace"
+		},
+		"EaTest_password": {
+			"value": ""
+		},
+		"yvworkspace-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:yvworkspace.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"EaTest_properties_typeProperties_server": {
+			"value": "localopfosql2zz000use2.database.windows.net"
+		},
+		"EaTest_properties_typeProperties_database": {
+			"value": "ea-Nexus"
+		},
+		"EaTest_properties_typeProperties_userName": {
+			"value": "NexusDevTeam"
+		},
+		"yvworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://yvstoragesypaps.dfs.core.windows.net"
+		}
+	}
+}
