@@ -1,0 +1,17 @@
+{
+	"name": "EADataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "EaTest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "ea",
+			"table": "Office"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
