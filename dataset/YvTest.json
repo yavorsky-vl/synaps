@@ -1,0 +1,31 @@
+{
+	"name": "YvTest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "yvtest",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "NameOrganisation",
+				"type": "nchar"
+			},
+			{
+				"name": "CreateDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "yvv",
+			"table": "Organisation"
+		}
+	}
+}
